@@ -175,8 +175,8 @@ def main(_):
   logging.info('%d training and %d validation examples.',
                len(train_examples), len(val_examples))
 
-  train_output_path = 'train.record'
-  val_output_path = 'val.record'
+  train_output_path = 'tf_record/train.record'
+  val_output_path = 'tf_record/val.record'
   create_tf_record(train_output_path, label_map_dict, annotations_dir,
                    image_dir, train_examples)
   create_tf_record(val_output_path, label_map_dict, annotations_dir,

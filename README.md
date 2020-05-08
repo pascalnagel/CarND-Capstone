@@ -93,9 +93,9 @@ For traffic light detection and classification I used the [tensorflow detection 
 
 ### Training Data
 
-Instead of manually labelling frames recorded from the simulator, I generated training data by cropping around 10-20 traffic lights of different states and distances from recorded images and placing them after random resizes and brightness variations in random places in one of around 100 background images, recorded from the simulator. This way the bounding box labels are already known for all 25k generated training images without any labelling effort. Here are a few samples:
+Instead of manually labelling frames recorded from the simulator, I generated training data by cropping 30 traffic lights of different states and distances from recorded images and placing them, after random resizes and brightness variations, in random places in one of 1000 background images. Background images and crops have been taken from both, the simulator and the provided rosbag. This way the bounding box labels are already known for all 25k generated training images without any labelling effort. Here are a few samples:
 
-<img src="imgs/sample_train_images/000000.jpg" width="20%"> <img src="imgs/sample_train_images/000001.jpg" width="20%"> <img src="imgs/sample_train_images/000002.jpg" width="20%"> <img src="imgs/sample_train_images/000003.jpg" width="20%"> <img src="imgs/sample_train_images/000004.jpg" width="20%"> <img src="imgs/sample_train_images/000005.jpg" width="20%"> <img src="imgs/sample_train_images/000006.jpg" width="20%"> <img src="imgs/sample_train_images/000007.jpg" width="20%">
+<img src="imgs/sample_train_images/000030.jpg" width="20%"> <img src="imgs/sample_train_images/000001.jpg" width="20%"> <img src="imgs/sample_train_images/000031.jpg" width="20%"> <img src="imgs/sample_train_images/000032.jpg" width="20%"> <img src="imgs/sample_train_images/000033.jpg" width="20%"> <img src="imgs/sample_train_images/000005.jpg" width="20%"> <img src="imgs/sample_train_images/000006.jpg" width="20%"> <img src="imgs/sample_train_images/000007.jpg" width="20%">
 
 The labels were saved in the PASCAL VOC format. All of this is reproducable by following the jupyter notebook ``ros/src/tl_detector/light_classification/data_generator.ipynb``. This will automatically save the xml annotations and training images within the ``models`` folder.
 

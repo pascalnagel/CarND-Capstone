@@ -13,3 +13,4 @@ tensorflow==1.14
 ujson==1.35
 wsaccel==0.6.2
 mock==3.0
+funcsigs==1.0

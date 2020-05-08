@@ -21,6 +21,7 @@ COPY requirements.txt ./requirements.txt
 RUN pip install -r requirements.txt
 
 # install required ros dependencies
+RUN apt-get update
 RUN apt-get install -y ros-$ROS_DISTRO-cv-bridge
 RUN apt-get install -y ros-$ROS_DISTRO-pcl-ros
 RUN apt-get install -y ros-$ROS_DISTRO-image-proc
