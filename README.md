@@ -109,7 +109,7 @@ export PYTHONPATH=$PYTHONPATH:`pwd`:`pwd`/slim
 
 We then run ``create_tf_record.py`` to generate the expected train and test data format (``train.record`` and ``eval.record``). All training and preprocessing details are contained in ``pipeline.config``.
 
-To start transfer learning on the pre-trained network saved in ``checkpoints``, simply execute ``train.sh``. The final model used in the submission was trained for ~15k steps, which took ~1.5 hours on a GTX 1060. To evaluate the model performance on the test data after training, execute ``eval.sh``. Finally, we need to export the model to the frozen model format for later inference during runtime. This conversion is carried out by executing ``export_model.sh``.
+To start transfer learning on the pre-trained network saved in ``checkpoints``, simply execute ``train.sh``. The final model used in the submission was trained for ~55k steps, which took ~10 hours on a GTX 1060. To evaluate the model performance on the test data after training, execute ``eval.sh``. Finally, we need to export the model to the frozen model format for later inference during runtime. This conversion is carried out by executing ``export_model.sh``.
 
 Here is what the inference looks like in action:
 
