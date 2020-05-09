@@ -72,11 +72,9 @@ The following video gives an idea of the intended behavior:
 
 [![Capstone Car in Simulator](https://img.youtube.com/vi/PzIRniXv0z0/0.jpg)](https://www.youtube.com/watch?v=PzIRniXv0z0)
 
-The decisive nodes are the following:
-
 ### Traffic Light Detection Node
 
-This node evaluates the position of the next traffic light along the waypoints and the corresponding hold line position. It then predicts its state (red, yellow or green) using a SSD object detection model. If the state is red, the hold line position is sent to the ``/traffic_waypoint`` topic. Details on the model and its training are explained in detail in the section "Traffic Light Detection".
+This node evaluates the position of the next traffic light along the waypoints and the corresponding hold line position. It then predicts its state (red, yellow or green) using a SSD object detection model. If the state is red, the hold line position is published to the ``/traffic_waypoint`` topic. Details on the model and its training are explained in detail in the section "Traffic Light Detection".
 
 ### Waypoint Updater Node
 
@@ -93,9 +91,9 @@ For traffic light detection and classification I used the [tensorflow detection 
 
 ### Training Data
 
-Instead of manually labelling frames recorded from the simulator, I generated training data by cropping 30 traffic lights of different states and distances from recorded images and placing them, after random resizes and brightness variations, in random places in one of 1000 background images. Background images and crops have been taken from both, the simulator and the provided rosbag. This way the bounding box labels are already known for all 25k generated training images without any labelling effort. Here are a few samples:
+Instead of manually labelling frames recorded from the simulator, I generated training data by cropping around 10-20 traffic lights of different states and distances from recorded images and placing them after random resizes and brightness variations in random places in one of around 100 background images, recorded from the simulator. This way the bounding box labels are already known for all 25k generated training images without any labelling effort. Here are a few samples:
 
-<img src="imgs/sample_train_images/000030.jpg" width="20%"> <img src="imgs/sample_train_images/000001.jpg" width="20%"> <img src="imgs/sample_train_images/000031.jpg" width="20%"> <img src="imgs/sample_train_images/000032.jpg" width="20%"> <img src="imgs/sample_train_images/000033.jpg" width="20%"> <img src="imgs/sample_train_images/000005.jpg" width="20%"> <img src="imgs/sample_train_images/000006.jpg" width="20%"> <img src="imgs/sample_train_images/000007.jpg" width="20%">
+<img src="imgs/sample_train_images/000030.jpg" width="20%"> <img src="imgs/sample_train_images/000031.jpg" width="20%"> <img src="imgs/sample_train_images/000002.jpg" width="20%"> <img src="imgs/sample_train_images/000032.jpg" width="20%"> <img src="imgs/sample_train_images/000004.jpg" width="20%"> <img src="imgs/sample_train_images/000005.jpg" width="20%"> <img src="imgs/sample_train_images/000006.jpg" width="20%"> <img src="imgs/sample_train_images/000007.jpg" width="20%">
 
 The labels were saved in the PASCAL VOC format. All of this is reproducable by following the jupyter notebook ``ros/src/tl_detector/light_classification/data_generator.ipynb``. This will automatically save the xml annotations and training images within the ``models`` folder.
 
@@ -103,7 +101,7 @@ The labels were saved in the PASCAL VOC format. All of this is reproducable by f
 
 The training is carried out in `ros/src/tl_detector/light_classification/models`. First we start off by making the required object detection packages available from our shell:
 
-```
+```bash
 cd research
 protoc object_detection/protos/*.proto --python_out=.
 export PYTHONPATH=$PYTHONPATH:`pwd`:`pwd`/slim
@@ -115,7 +113,9 @@ To start transfer learning on the pre-trained network saved in ``checkpoints``, 
 
 Here is what the inference looks like in action:
 
-![Sample predictions](imgs/classifier_output.gif)
+![Sample predictions](imgs/sim_inference.gif)
+
+The state is then simply determined as the majority vote of all detected boxes.
 
 
 ## Real world testing
@@ -124,16 +124,20 @@ Here is what the inference looks like in action:
 ```bash
 unzip traffic_light_bag_file.zip
 ```
-3. Play the bag file
+3. Launch the bag_validator node
 ```bash
-rosbag play -l traffic_light_bag_file/traffic_light_training.bag
+roslaunch src/bag_validator/launch/bag_validator.launch
 ```
-4. Launch your project in site mode
+4. Play the bag file
 ```bash
-cd CarND-Capstone/ros
-roslaunch launch/site.launch
+rosbag play -l traffic_light_bag_file/loop_with_traffic_light.bag
 ```
-5. Confirm that traffic light detection works on real life images
+5. Confirm that traffic light detection works on these real life images, by inspecting the predicted bounding boxes saved to ``ros/classifier_output``
+
+In my case the resulting predictions on the provided ros bag data looked like this:
+
+![Sample predictions](imgs/bag_inference.gif)
+
 
 ### Other library/driver information
 Outside of `requirements.txt`, here is information on other driver/library versions used in the simulator and Carla:
@@ -148,5 +152,3 @@ Specific to these libraries, the simulator grader and Carla use the following:
 | TensorRT | N/A | N/A |
 | OpenCV | 3.2.0-dev | 2.4.8 |
 | OpenMP | N/A | N/A |
-
-We are working on a fix to line up the OpenCV versions between the two.

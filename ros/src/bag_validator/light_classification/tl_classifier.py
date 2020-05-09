@@ -1,6 +1,7 @@
 from styx_msgs.msg import TrafficLight
 from PIL import Image
 from PIL.ImageDraw import Draw
+from PIL import ImageFont
 import numpy as np
 import tensorflow as tf
 from collections import Counter
@@ -11,10 +12,14 @@ class TLClassifier(object):
         self.graph = self.load_graph(self.frozen_graph_filename)
         self.sess = tf.Session(graph=self.graph)
         self.prediction_counter = 0
+        self.class_map_str = {1: 'RED',
+                              2: 'YELLOW',
+                              3: 'GREEN'}
         self.class_map = {1: TrafficLight.RED,
                           2: TrafficLight.GREEN,
                           3: TrafficLight.YELLOW}
         self.save_pred_images = True
+        self.font = ImageFont.truetype('light_classification/arial.ttf', 22) #font size for labels
 
     def load_graph(self, frozen_graph_filename):
         with tf.gfile.GFile(frozen_graph_filename, "rb") as f:
@@ -57,10 +62,10 @@ class TLClassifier(object):
                     ymax = int(box[2]*height)
                     draw = Draw(pilimg)
                     draw.rectangle([(xmin, ymin), (xmax, ymax)], outline='red')
-                    draw.text((xmax+5, ymin+5), "Class: "+str(predclass))
+                    draw.text((xmax+5, ymin+5), "Class: "+str(self.class_map_str[predclass]), font=self.font)
         
         if self.save_pred_images:
-            pilimg.save("/capstone/ros/classifier_output/{:0>5d}.jpg".format(self.prediction_counter))
+            pilimg.save("/capstone/ros/classifier_output/bag/{:0>5d}.jpg".format(self.prediction_counter))
             self.prediction_counter += 1
 
         if classes:

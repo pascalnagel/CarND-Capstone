@@ -1,1 +1,1 @@
-python research/object_detection/export_inference_graph.py --input_type image_tensor --pipeline_config_path pipeline.config --trained_checkpoint_prefix  train/model.ckpt-11000 --output_directory final_model
+python research/object_detection/export_inference_graph.py --input_type image_tensor --pipeline_config_path pipeline.config --trained_checkpoint_prefix  train/model.ckpt-54721 --output_directory final_model
