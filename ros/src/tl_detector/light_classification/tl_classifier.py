@@ -18,7 +18,7 @@ class TLClassifier(object):
         self.class_map = {1: TrafficLight.RED,
                           2: TrafficLight.GREEN,
                           3: TrafficLight.YELLOW}
-        self.save_pred_images = True
+        self.save_pred_images = False
         self.font = ImageFont.truetype('light_classification/arial.ttf', 22) #font size for labels
 
     def load_graph(self, frozen_graph_filename):
