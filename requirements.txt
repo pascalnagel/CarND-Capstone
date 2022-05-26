@@ -8,7 +8,7 @@ Pillow==2.2.1
 scipy==0.19.1
 keras==2.0.8
 tensorflow==1.14
-ujson==1.35
+ujson==5.2.0
 wsaccel==0.6.2
 mock==3.0
 funcsigs==1.0
